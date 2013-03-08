@@ -1,0 +1,13 @@
+{
+    "name":"BoxxyNotifications",
+    "version":"0.0.1",
+    "private":true,
+    "scripts":{
+        "start":"node BoxxyNotifications"
+    },
+    "dependencies":{
+        "irc":"0.3.6",
+        "path":"0.4.9",
+        "watchr":"2.3.7"
+    }
+}
