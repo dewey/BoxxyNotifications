@@ -30,30 +30,30 @@ watchr.watch({
     listeners: {
         change: function(changeType,filePath,fileCurrentStat,filePreviousStat){
             if(changeType == "create" && (path.dirname(filePath) == watchedDirectory)) {
-                bot.say(activeChannel,'Download finished: ' + path.basename(filePath));
+                bot.say(activeChannel, irc.colors.wrap('dark_green', 'Download finished: ') + path.basename(filePath));
             }
 
             else if (path.dirname(filePath) == watchedDirectory + "/music_what") {
                 if(changeType == "create") {
-                    bot.say(activeChannel,'[What] Download finished: ' + path.basename(filePath));
+                    bot.say(activeChannel, irc.colors.wrap('dark_green', '[What] Download finished: ') + path.basename(filePath));
                 } else if (changeType == "delete") {
-                    bot.say(activeChannel,'Deleted: ' + path.basename(filePath));
+                    bot.say(activeChannel, irc.colors.wrap('dark_red', 'Trashed: ') + path.basename(filePath));
                 }
             }
             
             else if (path.dirname(filePath) == watchedDirectory + "/movie_ptp") {
                 if(changeType == "create") {
-                    bot.say(activeChannel,'[PTP] Download finished: ' + path.basename(filePath));
+                    bot.say(activeChannel, irc.colors.wrap('dark_green', '[PTP] Download finished: ') + path.basename(filePath));
                 } else if (changeType == "delete") {
-                    bot.say(activeChannel,'Deleted: ' + path.basename(filePath));
+                    bot.say(activeChannel, irc.colors.wrap('dark_red', 'Trashed: ') + path.basename(filePath));
                 }
             }
 
             else if (path.dirname(filePath) == watchedDirectory + "/tv_auto") {
                 if(changeType == "create") {
-                    bot.say(activeChannel,'[BTN] Download finished: ' + path.basename(filePath));
+                    bot.say(activeChannel, irc.colors.wrap('dark_green', '[BTN] Download finished: ') + path.basename(filePath));
                 } else if (changeType == "delete") {
-                    bot.say(activeChannel,'Deleted: ' + path.basename(filePath));
+                    bot.say(activeChannel, irc.colors.wrap('dark_red', 'Trashed: ') + path.basename(filePath));
                 }
             }
         }
@@ -66,7 +66,7 @@ watchr.watch({
 // IRC Handlers
 bot.addListener('message', function (from, to, message) {
     if(message == "!quit" && from == "dewey") {
-        bot.disconnect();
+        bot.disconnect("Abort mission!");
        
     } else if (message == "!quit" && from != "dewey") {
         bot.say(activeChannel,'Uhm no.');
