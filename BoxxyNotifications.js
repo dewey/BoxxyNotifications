@@ -88,21 +88,31 @@ bot.addListener('message', function (from, to, message) {
 });
 
 bot.addListener('error', function(message) {
-    console.error('ERROR: %s: %s', message.command, message.args.join(' '));
+    if(config.bot.debug) {
+        console.error('ERROR: %s: %s', message.command, message.args.join(' '));
+    }
 });
 
 bot.addListener('pm', function(nick, message) {
-    console.log('Got private message from %s: %s', nick, message);
+    if(config.bot.debug) {
+        console.log('Got private message from %s: %s', nick, message);
+    }
 });
 
 bot.addListener('join', function(channel, who) {
-    console.log('%s has joined %s', who, channel);
+    if(config.bot.debug) {
+        console.log('%s has joined %s', who, channel);
+    }
 });
 
 bot.addListener('part', function(channel, who, reason) {
-    console.log('%s has left %s: %s', who, channel, reason);
+    if(config.bot.debug) {
+        console.log('%s has left %s: %s', who, channel, reason);
+    }
 });
 
 bot.addListener('kick', function(channel, who, by, reason) {
-    console.log('%s was kicked from %s by %s: %s', who, channel, by, reason);
+    if(config.bot.debug) {
+        console.log('%s was kicked from %s by %s: %s', who, channel, by, reason);
+    }
 });
