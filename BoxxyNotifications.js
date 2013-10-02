@@ -4,6 +4,7 @@ var irc = require('irc');
 var watchr = require('watchr');
 var path = require('path');
 var imdb = require('imdb-api');
+var ptp = require('ptp.js');
 
 // IRC Config
 console.log('Connect to the IRC Server');
@@ -57,6 +58,13 @@ watchr.watch({
     }
 });
 
+bot.addListener('message', function (from, to, message) {
+    if(message.indexOf("!dl") != -1) {
+        var ptpid = message.replace(/!dl\s/g, "");
+        bot.say(config.bot.channel, irc.colors.wrap('dark_green', "Start Download: ") + config.tracker.poststring+ptpid);
+    }
+});
+
 // IMDB
 bot.addListener('message', function (from, to, message) {
     if(message.indexOf("!imdb") != -1) {
@@ -64,24 +72,50 @@ bot.addListener('message', function (from, to, message) {
         
         imdb.getReq({ name: title }, function(err, things) {
             movie = things;
-            bot.say(config.bot.channel, "> IMDB: " + movie.imdburl);
-            bot.say(config.bot.channel, "> Rating: " + movie.rating);
-            bot.say(config.bot.channel, "> Year: " + movie.year);
-            bot.say(config.bot.channel, "> Genre: " + movie.genres);
-            bot.say(config.bot.channel, "> Country: " + movie.country);
-            bot.say(config.bot.channel, "> Runtime: " + movie.runtime);
-            bot.say(config.bot.channel, "> Download: " + config.bot.searchstring + movie.imdbid);
-        });
-    }
-});
 
+            if(!err) {
+                bot.say(config.bot.channel, "> IMDB: " + movie.imdburl) + " [Rating: "+movie.rating+"] " + "[Year: "+movie.year+"] " + "[Runtime: "+movie.runtime+"]";
+                bot.say(config.bot.channel, "> Genre: " + movie.genres);
+                bot.say(config.bot.channel, "> Country: " + movie.country);
+                bot.say(config.bot.channel, "> Download: " + config.bot.searchstring + movie.imdbid);
+                bot.say(config.bot.channel, "Fetching Releases from PTP...");
+
+
+                // PassThePopcorn
+                ptp.login(config.tracker.username, config.tracker.password, config.tracker.passkey, function (error, data) {
+                    if(error) {
+                        throw error;
+                    }
+                    data = JSON.parse(data);
+                    if(data.Result === 'Ok') {
+                        ptp.search(movie.imdbid, function (error, data) {
+                            if(error) {
+                                throw error;
+                            }
+                            var response = JSON.parse(data)
+
+                            var k, releases;
+                            for (k = 0; k < response.Movies[0].Torrents.length; k++)
+                            {
+                              releases = response.Movies[0].Torrents[k].Id;
+                              bot.say(config.bot.channel, "   ID: " + response.Movies[0].Torrents[k].Id +" - ["+response.Movies[0].Torrents[k].Resolution+"] " + " ["+response.Movies[0].Torrents[k].Codec+"/"+response.Movies[0].Torrents[k].Container+"] "+ " ["+response.Movies[0].Torrents[k].Source+"] " + "["+(parseInt(response.Movies[0].Torrents[k].Size)/1024/1024).toFixed(2)+"MB] " + "[Scene: "+response.Movies[0].Torrents[k].Scene+"] " + "[Seeder ("+ response.Movies[0].Torrents[k].Seeders+") / Leecher ("+response.Movies[0].Torrents[k].Leechers+")]");
+                          }
+                      });
+                    }
+                });
+            } else {
+                bot.say(config.bot.channel, "¯\(°_o)/¯");
+            }
+        });
+}
+});
 
 
 // IRC Handlers
 bot.addListener('message', function (from, to, message) {
     if(message == "!quit" && from == "dewey") {
         bot.disconnect("Abort mission!");
-       
+
     } else if (message == "!quit" && from != "dewey") {
         bot.say(config.bot.channel,'Uhm no.');
     }
