@@ -5,6 +5,7 @@ config.misc = {};
 config.tracker = {};
 
 config.bot.username= 'Boxxy';
+config.bot.botowner= 'dewey';
 config.bot.realname= 'BoxxyNotifications';
 config.bot.server= 'irc.example.com';
 config.bot.port= 1234;

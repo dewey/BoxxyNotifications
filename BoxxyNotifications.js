@@ -113,10 +113,10 @@ bot.addListener('message', function (from, to, message) {
 
 // IRC Handlers
 bot.addListener('message', function (from, to, message) {
-    if(message == "!quit" && from == "dewey") {
+    if(message == "!quit" && from == config.bot.botowner) {
         bot.disconnect("Abort mission!");
 
-    } else if (message == "!quit" && from != "dewey") {
+    } else if (message == "!quit" && from != config.bot.botowner) {
         bot.say(config.bot.channel,'Uhm no.');
     }
 });
