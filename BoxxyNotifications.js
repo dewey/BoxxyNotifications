@@ -85,7 +85,6 @@ bot.addListener('message', function (from, to, message) {
                     
                     var posterUrl = JSON.parse(response.getBody())
                     bot.say(config.bot.channel, posterUrl.Poster);
-
                     bot.say(config.bot.channel, "Fetching Releases from PTP...");
                 });
                 
