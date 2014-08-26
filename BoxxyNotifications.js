@@ -27,7 +27,8 @@ console.log('Watch our complete directory');
 
 var watcher = chokidar.watch(config.misc.watchedDirectory, {
     ignored: /[\/\\]\./,
-    persistent: true
+    persistent: true,
+    ignoreInitial: true
 });
 
 watcher
